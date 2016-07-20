@@ -44,9 +44,12 @@ var exports = function exports(element, fn) {
     })
   }
 
-  function objectLoad() {
+  function objectLoad(e) {
     this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__
     this.contentDocument.defaultView.addEventListener('resize', resizeListener)
+
+    // Trigger an initial resize too
+    this.contentDocument.defaultView.dispatchEvent(new Event("resize"))
   }
 
   if (!element.__resizeListeners__) {
