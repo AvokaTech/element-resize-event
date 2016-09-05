@@ -49,7 +49,7 @@ var exports = function exports(element, fn) {
     this.contentDocument.defaultView.addEventListener('resize', resizeListener)
 
     // Trigger an initial resize too
-    this.contentDocument.defaultView.dispatchEvent(new Event("resize"))
+    this.contentDocument.defaultView.dispatchEvent(new CustomEvent("resize"))
   }
 
   if (!element.__resizeListeners__) {
