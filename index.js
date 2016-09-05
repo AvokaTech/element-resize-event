@@ -55,7 +55,7 @@ var exports = function exports(element, fn) {
       // IE is not very good...
       var event = document.createEvent("CustomEvent");
 
-      event.initCustomEvent("resize");
+      event.initCustomEvent("resize", true, false, {});
 
       this.contentDocument.defaultView.dispatchEvent(event)
     }
