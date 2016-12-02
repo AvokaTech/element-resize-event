@@ -38,9 +38,11 @@ var exports = function exports(element, fn) {
     }
     win.__resizeRAF__ = requestFrame(function () {
       var trigger = win.__resizeTrigger__
-      trigger.__resizeListeners__.forEach(function (fn) {
-        fn.call(trigger, e)
-      })
+      if(trigger !== undefined) {
+        trigger.__resizeListeners__.forEach(function (fn) {
+          fn.call(trigger, e)
+        })
+      }
     })
   }
 
@@ -71,7 +73,7 @@ var exports = function exports(element, fn) {
         element.style.position = 'relative'
       }
       var obj = element.__resizeTrigger__ = document.createElement('object')
-      obj.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;')
+      obj.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1; opacity: 0;')
       obj.setAttribute('class', 'resize-sensor')
       obj.__resizeElement__ = element
       obj.onload = objectLoad
@@ -86,6 +88,19 @@ var exports = function exports(element, fn) {
     }
   }
   element.__resizeListeners__.push(fn)
+}
+
+exports.unbind = function(element, fn){
+  var attachEvent = document.attachEvent;
+  element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
+  if (!element.__resizeListeners__.length) {
+    if (attachEvent) {
+      element.detachEvent('onresize', resizeListener);
+    } else {
+      element.__resizeTrigger__.contentDocument.defaultView.removeEventListener('resize', resizeListener);
+      element.__resizeTrigger__ = !element.removeChild(element.__resizeTrigger__);
+    }
+  }
 }
 
 module.exports = (typeof window === 'undefined') ? exports : exports.bind(window)
